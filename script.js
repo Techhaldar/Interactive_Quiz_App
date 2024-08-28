@@ -187,6 +187,8 @@ const nextButton = document.getElementById("next-btn");
 
 let currentQuestionIndex = 0;
 let score = 0;
+let timer;
+let timeLeft = 10; // Set time per question in seconds
 
 function startQuiz(){
     currentQuestionIndex = 0;
@@ -253,6 +255,28 @@ function handleNextButton (){
     }else{
         showScore();
     }
+}
+
+function startTimer() {
+    timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById("timer").innerHTML = `Time left: ${timeLeft}s`;
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            nextButton.style.display = "block"; // Show the next button
+            autoSubmit(); // Automatically submit the answer when time is up
+        }
+    }, 1000);
+}
+
+function autoSubmit() {
+    Array.from(answerButtons.children).forEach(button => {
+        if (button.dataset.correct === "true") {
+            button.classList.add("correct");
+        }
+        button.disabled = true;
+    });
+    nextButton.style.display = "block";
 }
 
 nextButton.addEventListener('click', () =>{
